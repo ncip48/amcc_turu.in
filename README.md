@@ -1,4 +1,4 @@
-## Penggunaan warna dan widget ada di Splash sama Home
+## Penggunaan warna dan widget ada di Splash, Example, Home
 
 ## di folder lib/pages
 
