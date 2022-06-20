@@ -27,7 +27,7 @@ class _ExamplePageState extends State<ExamplePage> {
     return Theme(
       data: theme.copyWith(
           colorScheme: theme.colorScheme
-              .copyWith(secondary: customTheme.cookifyPrimary.withAlpha(40))),
+              .copyWith(secondary: customTheme.turuInPrimary.withAlpha(40))),
       child: Scaffold(
         body: ListView(
           padding: FxSpacing.fromLTRB(24, 100, 24, 0),
@@ -49,12 +49,12 @@ class _ExamplePageState extends State<ExamplePage> {
               textFieldStyle: FxTextFieldStyle.outlined,
               textFieldType: FxTextFieldType.email,
               filled: true,
-              fillColor: customTheme.cookifyPrimary.withAlpha(40),
-              enabledBorderColor: customTheme.cookifyPrimary,
-              focusedBorderColor: customTheme.cookifyPrimary,
-              prefixIconColor: customTheme.cookifyPrimary,
-              labelTextColor: customTheme.cookifyPrimary,
-              cursorColor: customTheme.cookifyPrimary,
+              fillColor: customTheme.turuInSecondary,
+              enabledBorderColor: customTheme.turuInSecondary,
+              focusedBorderColor: customTheme.turuInSecondary,
+              prefixIconColor: customTheme.cookifyOnPrimary,
+              labelTextColor: customTheme.cookifyOnPrimary,
+              cursorColor: customTheme.cookifyOnPrimary,
             ),
             FxSpacing.height(24),
             FxTextField(
@@ -84,7 +84,7 @@ class _ExamplePageState extends State<ExamplePage> {
             FxButton.block(
                 borderRadiusAll: 8,
                 onPressed: () {},
-                backgroundColor: customTheme.cookifyPrimary,
+                backgroundColor: customTheme.turuInTersier,
                 child: FxText.labelLarge(
                   "Log In",
                   color: customTheme.cookifyOnPrimary,
