@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:turu_in/pages/ExamplePage.dart';
 import 'package:turu_in/pages/HomePage.dart';
 import 'package:turu_in/pages/SigninPage.dart';
 import 'package:turu_in/theme/app_theme.dart';
@@ -60,7 +59,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return SplashScreen(
       seconds: 5,
-      navigateAfterSeconds: _isLogin ? ExamplePage() : SigninPage(),
+      navigateAfterSeconds: _isLogin ? HomePage() : SigninPage(),
       title: Text(
         'Turu.in',
         textScaleFactor: 2,
