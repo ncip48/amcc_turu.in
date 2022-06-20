@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:turu_in/pages/HomePage.dart';
 import 'package:turu_in/pages/SigninPage.dart';
 import 'package:turu_in/theme/app_theme.dart';
 
@@ -19,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
   late CustomTheme customTheme;
   late ThemeData theme;
   String? _version;
-  bool _isLogin;
+  bool _isLogin = false;
 
   @override
   void initState() {
@@ -41,17 +42,24 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _checkLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var user = prefs.getBool('login');
-    setState(() {
-      _isLogin = user != null ? true : false;
-    });
+    var login = prefs.getBool('login');
+    if (login == null) {
+      prefs.setBool('login', false);
+      setState(() {
+        _isLogin = false;
+      });
+    } else {
+      setState(() {
+        _isLogin = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
-      seconds: 4000,
-      navigateAfterSeconds: SigninPage(),
+      seconds: 5,
+      navigateAfterSeconds: _isLogin ? HomePage() : SigninPage(),
       title: Text(
         'Turu.in',
         textScaleFactor: 2,
