@@ -69,7 +69,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    log((MediaQuery.of(context).size.width * 0.95).toString());
+    log((MediaQuery.of(context).size.width / 9.1).toString());
     return Theme(
       data: theme.copyWith(
           colorScheme: theme.colorScheme
@@ -172,31 +172,33 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                 ],
                               ),
                               FxButton.rounded(
-                                  backgroundColor: customTheme.turuInSecondary,
-                                  elevation: 0,
-                                  onPressed: () {},
-                                  child: Row(
-                                    children: [
-                                      FxText.labelMedium(
-                                        "Simpan",
-                                        color: Colors.white,
-                                        fontWeight: 600,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Icon(
-                                        Icons.turned_in,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                    ],
-                                  ))
+                                backgroundColor: customTheme.turuInSecondary,
+                                elevation: 0,
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FxText.labelMedium(
+                                      "Simpan",
+                                      color: Colors.white,
+                                      fontWeight: 600,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      Icons.turned_in,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           )),
                       FxContainer(
                         padding: const EdgeInsets.only(
-                          top: 26,
+                          top: 16,
                           left: 23,
                           right: 23,
                           bottom: 16,
@@ -302,7 +304,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                       ),
                       FxContainer(
                         padding: const EdgeInsets.only(
-                          top: 20,
+                          top: 16,
                           left: 23,
                           right: 23,
                           bottom: 16,
@@ -322,6 +324,162 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                               child: FxText.labelMedium(
                                 "Jl. Raya Cikarang No.1, Cikarang Utara, Cikarang, Bekasi, Jawa Barat, Indonesia",
                                 color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      FxContainer(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          left: 23,
+                          right: 23,
+                          bottom: 10,
+                        ),
+                        color: customTheme.turuInPrimary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.7,
+                              child: FxButton.rounded(
+                                backgroundColor: customTheme.turuInSecondary,
+                                elevation: 0,
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FxText.labelMedium(
+                                      "Maps",
+                                      color: Colors.white,
+                                      fontWeight: 600,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Image.asset(
+                                      "assets/gmaps.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.7,
+                              child: FxButton.rounded(
+                                backgroundColor: customTheme.turuInSecondary,
+                                elevation: 0,
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FxText.labelMedium(
+                                      "Gojek",
+                                      color: Colors.white,
+                                      fontWeight: 600,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Image.asset(
+                                      "assets/gojek.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 3.7,
+                              child: FxButton.rounded(
+                                backgroundColor: customTheme.turuInSecondary,
+                                elevation: 0,
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FxText.labelMedium(
+                                      "Grab",
+                                      color: Colors.white,
+                                      fontWeight: 600,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Image.asset(
+                                      "assets/grab.png",
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      FxContainer(
+                        padding: const EdgeInsets.only(
+                          top: 0,
+                          left: 23,
+                          right: 23,
+                          bottom: 10,
+                        ),
+                        color: customTheme.turuInPrimary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 9.1,
+                              height: 45,
+                              child: FxButton.rounded(
+                                padding: const EdgeInsets.all(0),
+                                backgroundColor: customTheme.turuInSecondary,
+                                elevation: 0,
+                                onPressed: () {},
+                                child: Icon(
+                                  Icons.share,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 9.1,
+                              height: 45,
+                              child: FxButton.rounded(
+                                padding: const EdgeInsets.all(0),
+                                backgroundColor: customTheme.turuInSecondary,
+                                elevation: 0,
+                                onPressed: () {},
+                                child: Icon(
+                                  Icons.message_outlined,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.68,
+                              height: 45,
+                              child: FxButton.rounded(
+                                backgroundColor: customTheme.turuInTersier,
+                                elevation: 0,
+                                onPressed: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    FxText.labelMedium(
+                                      "Booking, turu...",
+                                      color: Colors.white,
+                                      fontWeight: 600,
+                                      fontSize: 15,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
