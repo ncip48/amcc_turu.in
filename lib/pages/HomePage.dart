@@ -1,8 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
 import 'package:turu_in/model/Fasilitas.dart';
 import 'package:turu_in/theme/app_theme.dart';
@@ -19,17 +18,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late CustomTheme customTheme;
   late ThemeData theme;
+  late Color _colorStatusBar;
 
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+    _colorStatusBar = customTheme.turuInPrimary;
   }
 
   @override
   Widget build(BuildContext context) {
-    log((MediaQuery.of(context).size.width * 0.52).toString());
+    // log((MediaQuery.of(context).size.width * 0.52).toString());
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: _colorStatusBar,
+    ));
     return Theme(
       data: theme.copyWith(
           colorScheme: theme.colorScheme
@@ -65,16 +69,24 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(
                               height: 4,
                             ),
-                            FxText.titleMedium(
-                              'Yogyakarta',
-                              color: customTheme.turuInTersier,
-                              fontSize: 17,
+                            Row(
+                              children: [
+                                FxText.titleMedium(
+                                  'Yogyakarta',
+                                  color: customTheme.turuInTersier,
+                                  fontSize: 17,
+                                ),
+                                Icon(
+                                  Icons.expand_more,
+                                  color: customTheme.turuInTersier,
+                                )
+                              ],
                             ),
                           ],
                         ),
                         Container(
-                          height: 58,
-                          width: 58,
+                          height: 55,
+                          width: 55,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(58),
                             color: Colors.white,
