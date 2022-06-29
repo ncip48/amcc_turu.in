@@ -7,8 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
 import 'package:turu_in/model/Fasilitas.dart';
 import 'package:turu_in/theme/app_theme.dart';
+import 'package:turu_in/utils/MapUtils.dart';
 import 'package:turu_in/widget/ImageDetail.dart';
 import 'package:turu_in/widget/ItemTerdekat.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -51,6 +54,14 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
 
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+  }
+
+  Future<void> _openMaps(lat, lon) async {
+    await MapUtils.openMap(lat, lon);
+  }
+
+  Future<void> _shareLink() async {
+    Share.share("Temukan kost haji apud di turu.in/s/123");
   }
 
   @override
@@ -107,23 +118,41 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                               },
                             ),
                           ),
-                          Container(
-                            height: 30,
-                            width: MediaQuery.of(context).size.width / 3,
-                            margin: EdgeInsets.only(bottom: 0),
-                            padding: EdgeInsets.only(top: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: SmoothPageIndicator(
+                                  controller: _pageController,
+                                  count: 4,
+                                  effect: ExpandingDotsEffect(
+                                    dotHeight: 8,
+                                    dotWidth: 8,
+                                    dotColor: Colors.white54,
+                                    activeDotColor: Colors.white,
+                                  ),
+                                ),
                               ),
-                              color: customTheme.turuInPrimary,
-                            ),
-                            child: Center(
-                              child: FxText.labelLarge(
-                                "IDR 500K/bulan",
-                                color: Colors.white,
+                              Container(
+                                height: 30,
+                                width: MediaQuery.of(context).size.width / 3,
+                                margin: EdgeInsets.only(bottom: 0),
+                                padding: EdgeInsets.only(top: 10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                  ),
+                                  color: customTheme.turuInPrimary,
+                                ),
+                                child: Center(
+                                  child: FxText.labelLarge(
+                                    "IDR 500K/bulan",
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
@@ -345,7 +374,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                               child: FxButton.rounded(
                                 backgroundColor: customTheme.turuInSecondary,
                                 elevation: 0,
-                                onPressed: () {},
+                                onPressed: () {
+                                  _openMaps(-3.823216, -38.481700);
+                                },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -439,7 +470,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                 padding: const EdgeInsets.all(0),
                                 backgroundColor: customTheme.turuInSecondary,
                                 elevation: 0,
-                                onPressed: () {},
+                                onPressed: () {
+                                  _shareLink();
+                                },
                                 child: Icon(
                                   Icons.share,
                                   color: Colors.white,

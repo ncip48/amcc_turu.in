@@ -47,6 +47,9 @@ dependencies:
   custom_refresh_indicator: ^1.1.1
   flutter_feather_icons: ^2.0.0+1
   material_design_icons_flutter: ^5.0.6595
+  url_launcher: ^6.1.4
+  share_plus: ^4.0.10
+  smooth_page_indicator: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:

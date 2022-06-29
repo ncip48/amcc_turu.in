@@ -28,6 +28,7 @@ class ImageDetail extends StatelessWidget {
                     ? loadingProgress.cumulativeBytesLoaded /
                         loadingProgress.expectedTotalBytes!
                     : null,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             );
           },
