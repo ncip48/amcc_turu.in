@@ -76,7 +76,7 @@ class _SplashPageState extends State<SplashPage> {
         height: 100,
       ),
       loadingText: Text(
-        'v ${_version ?? '0.0.0+0'}',
+        _version ?? '0.0.0+0',
         style: GoogleFonts.robotoMono(
           fontSize: 18,
           fontWeight: FontWeight.w300,
