@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
 import 'package:turu_in/model/Fasilitas.dart';
+import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:turu_in/widget/ItemRekomendasi.dart';
 import 'package:turu_in/widget/ItemTerdekat.dart';
@@ -84,17 +85,22 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        Container(
-                          height: 55,
-                          width: 55,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(58),
-                            color: Colors.white,
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                "https://media-exp2.licdn.com/dms/image/C5603AQGJgwZuQ3sUMQ/profile-displayphoto-shrink_800_800/0/1601275519734?e=1661990400&v=beta&t=AdTqkzPUK7PMBS8ExaV2pT7e97GzFLEFOkrrbEpmUmU",
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.Profil);
+                          },
+                          child: Container(
+                            height: 55,
+                            width: 55,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(58),
+                              color: Colors.white,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  "https://media-exp2.licdn.com/dms/image/C5603AQGJgwZuQ3sUMQ/profile-displayphoto-shrink_800_800/0/1601275519734?e=1661990400&v=beta&t=AdTqkzPUK7PMBS8ExaV2pT7e97GzFLEFOkrrbEpmUmU",
+                                ),
+                                fit: BoxFit.fill,
                               ),
-                              fit: BoxFit.fill,
                             ),
                           ),
                         ),

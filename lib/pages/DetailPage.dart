@@ -1,11 +1,12 @@
 // ignore_for_file: file_names, prefer_const_constructors, unused_field, prefer_final_fields, non_constant_identifier_names, sized_box_for_whitespace
 
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
 import 'package:turu_in/model/Fasilitas.dart';
+import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:turu_in/utils/MapUtils.dart';
 import 'package:turu_in/widget/ImageDetail.dart';
@@ -80,7 +81,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    log((MediaQuery.of(context).size.width / 9.1).toString());
+    // log((MediaQuery.of(context).size.width / 9.1).toString());
     return Theme(
       data: theme.copyWith(
           colorScheme: theme.colorScheme
@@ -501,7 +502,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                               child: FxButton.rounded(
                                 backgroundColor: customTheme.turuInTersier,
                                 elevation: 0,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(context, Routes.Booking);
+                                },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

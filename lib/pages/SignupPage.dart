@@ -2,16 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:turu_in/routes/routes.dart';
 
-class SigninPage extends StatefulWidget {
-  const SigninPage({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
 
   @override
-  State<SigninPage> createState() => _SigninPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _SigninPageState extends State<SigninPage> {
+class _SignupPageState extends State<SignupPage> {
   bool _secureText1 = false;
   bool _secureText2 = false;
   bool isChecked = false;
@@ -58,14 +57,14 @@ class _SigninPageState extends State<SigninPage> {
             ),
           ),
           SizedBox(
-            height: mainSize.height * 0.075,
+            height: mainSize.height * 0.05,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 48, left: 49),
             child: Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Login',
+                'Sign Up',
                 textAlign: TextAlign.start,
                 style: GoogleFonts.poppins(
                     color: Colors.white,
@@ -142,7 +141,45 @@ class _SigninPageState extends State<SigninPage> {
                       borderRadius: BorderRadius.circular(10))),
             ),
           ),
-          SizedBox(height: mainSize.height * 0.015),
+          Padding(
+            padding: const EdgeInsets.only(top: 12, right: 48, left: 49),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Confirm Password',
+                textAlign: TextAlign.start,
+                style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 6, right: 48, left: 49),
+            child: TextField(
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
+              obscureText: _secureText2,
+              decoration: InputDecoration(
+                  fillColor: Color(0xff3E4553),
+                  filled: true,
+                  hintText: 'Masukkan password..',
+                  hintStyle: GoogleFonts.openSans(color: Color(0xff6F7075)),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _secureText2 = !_secureText2;
+                      });
+                    },
+                    icon: Icon(_secureText2
+                        ? Icons.visibility
+                        : Icons.visibility_off_rounded),
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+            ),
+          ),
+          SizedBox(height: mainSize.height * 0.07),
           Row(
             children: [
               Padding(
@@ -173,122 +210,14 @@ class _SigninPageState extends State<SigninPage> {
                   color: Color(0xffFF7360),
                   borderRadius: BorderRadius.circular(10)),
               child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.Home);
-                  },
-                  child: Text(
-                    'Login',
-                    style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
-                  ))),
-          SizedBox(
-            height: mainSize.height * 0.024,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                height: 2,
-                width: 118,
-                color: Colors.white,
-              ),
-              Text(
-                'atau',
-                style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white),
-              ),
-              Container(
-                height: 2,
-                width: 118,
-                color: Colors.white,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: mainSize.height * 0.028,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 55.0),
-                child: Container(
-                  height: 36,
-                  width: 118,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.asset(
-                        'assets/google.png',
-                        width: 22,
-                        height: 22,
-                      ),
-                      Text(
-                        'Google',
-                        style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                height: 36,
-                width: 118,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.asset(
-                      'assets/facebook.png',
-                      width: 22,
-                      height: 22,
-                    ),
-                    Text(
-                      'Facebook',
-                      style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: mainSize.height * 0.024,
-          ),
-          Container(
-              width: 194,
-              height: 45,
-              decoration: BoxDecoration(
-                  color: Color(0xffFF7360),
-                  borderRadius: BorderRadius.circular(10)),
-              child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.Signup);
-                  },
+                  onPressed: () {},
                   child: Text(
                     'Sign Up',
                     style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.w500),
-                  ))),
+                  )))
         ],
       ),
     );

@@ -50,6 +50,7 @@ dependencies:
   url_launcher: ^6.1.4
   share_plus: ^4.0.10
   smooth_page_indicator: ^1.0.0+2
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
