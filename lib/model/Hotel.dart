@@ -17,7 +17,7 @@ class Hotel {
   int? districtId;
   String? districtName;
   int? totalRooms;
-  double? distance;
+  Facilities? facilities;
 
   Hotel(
       {this.id,
@@ -36,7 +36,7 @@ class Hotel {
       this.districtId,
       this.districtName,
       this.totalRooms,
-      this.distance});
+      this.facilities});
 
   Hotel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -55,7 +55,9 @@ class Hotel {
     districtId = json['district_id'];
     districtName = json['district_name'];
     totalRooms = json['total_rooms'];
-    distance = json['distance'];
+    facilities = json['facilities'] != null
+        ? new Facilities.fromJson(json['facilities'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -76,7 +78,34 @@ class Hotel {
     data['district_id'] = this.districtId;
     data['district_name'] = this.districtName;
     data['total_rooms'] = this.totalRooms;
-    data['distance'] = this.distance;
+    if (this.facilities != null) {
+      data['facilities'] = this.facilities!.toJson();
+    }
+    return data;
+  }
+}
+
+class Facilities {
+  String? wifi;
+  String? room;
+  String? type;
+  String? bathroom;
+
+  Facilities({this.wifi, this.room, this.type, this.bathroom});
+
+  Facilities.fromJson(Map<String, dynamic> json) {
+    wifi = json['wifi'];
+    room = json['room'];
+    type = json['type'];
+    bathroom = json['bathroom'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['wifi'] = this.wifi;
+    data['room'] = this.room;
+    data['type'] = this.type;
+    data['bathroom'] = this.bathroom;
     return data;
   }
 }

@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 import 'package:flutx/widgets/text/text.dart';
+import 'package:get/get.dart';
+import 'package:turu_in/model/Hotel.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 
@@ -10,12 +12,14 @@ class ItemRekomendasi extends StatelessWidget {
   final String nama;
   final String alamat;
   final String image;
+  final Hotel item;
 
   ItemRekomendasi(
       {required this.rating,
       required this.nama,
       required this.alamat,
-      required this.image});
+      required this.image,
+      required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class ItemRekomendasi extends StatelessWidget {
       focusColor: CustomTheme().turuInPrimary,
       highlightColor: CustomTheme().turuInPrimary,
       onTap: () {
-        Navigator.pushNamed(context, Routes.Detail, arguments: nama);
+        Get.toNamed(Routes.Detail, arguments: item, preventDuplicates: false);
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.365,

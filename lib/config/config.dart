@@ -8,8 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 bool isDev = kDebugMode;
-String urlHost =
-    isDev ? "http://192.168.18.33:2022" : "http://27.112.78.40:8090";
+String urlHosts = isDev
+    ? "http://192.168.18.33:2022"
+    : "https://b1bb-118-99-83-92.ap.ngrok.io";
+String urlHost = "https://b1bb-118-99-83-92.ap.ngrok.io";
 
 getRequestAPI(String prefix, String method, Object? body, context) async {
   if (prefix == 'auth/login') {
@@ -28,7 +30,9 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
         Map<String, dynamic> map = json.decode(response.body);
         if (map['message'].toString().contains('Unauthorized')) {
           log('Unauthorized');
-          return Navigator.of(context).pushNamed(Routes.Signin);
+          return Navigator.of(context)
+              .pushNamedAndRemoveUntil(Routes.Signin, (r) => false);
+          ;
         }
         log(map['data'].toString());
         if (!map['success']) {
@@ -109,7 +113,9 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
             if (map['message'].toString().contains('Unauthorized')) {
               log('Unauthorized');
               prefs.remove('user');
-              return Navigator.of(context).pushNamed(Routes.Signin);
+              return Navigator.of(context)
+                  .pushNamedAndRemoveUntil(Routes.Signin, (r) => false);
+              ;
             }
             log(map['message'].toString());
             if (!map['success']) {
@@ -142,7 +148,9 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
             if (map['message'].toString().contains('Unauthorized')) {
               log('Unauthorized');
               prefs.remove('user');
-              return Navigator.of(context).pushNamed(Routes.Signin);
+              return Navigator.of(context)
+                  .pushNamedAndRemoveUntil(Routes.Signin, (r) => false);
+              ;
             }
             return map['data'];
           } else {

@@ -15,6 +15,7 @@ class ItemTerdekat extends StatelessWidget {
   final String image;
   final Fasilitas fasilitas;
   final Hotel item;
+  final bool showDistance;
 
   ItemTerdekat(
       {required this.available,
@@ -22,7 +23,8 @@ class ItemTerdekat extends StatelessWidget {
       required this.alamat,
       required this.image,
       required this.fasilitas,
-      required this.item});
+      required this.item,
+      required this.showDistance});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class ItemTerdekat extends StatelessWidget {
       focusColor: CustomTheme().turuInPrimary,
       highlightColor: CustomTheme().turuInPrimary,
       onTap: () {
-        Get.toNamed(Routes.Detail, arguments: item);
+        Get.toNamed(Routes.Detail, arguments: item, preventDuplicates: false);
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -54,10 +56,24 @@ class ItemTerdekat extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          FxText.titleMedium(
-                            nama,
-                            color: Colors.white,
-                            fontWeight: 700,
+                          Row(
+                            children: [
+                              FxText.titleMedium(
+                                nama,
+                                color: Colors.white,
+                                fontWeight: 700,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              if (showDistance)
+                                FxText.titleSmall(
+                                  ' (' +
+                                      item.distance!.toStringAsFixed(1) +
+                                      ' km)',
+                                  color: Colors.white,
+                                ),
+                            ],
                           ),
                           FxText.titleSmall(
                             alamat,

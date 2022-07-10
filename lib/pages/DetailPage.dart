@@ -14,11 +14,13 @@ import 'package:turu_in/model/Fasilitas.dart';
 import 'package:turu_in/model/Hotel.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
+import 'package:turu_in/utils/Currency.dart';
 import 'package:turu_in/utils/MapUtils.dart';
 import 'package:turu_in/widget/ImageDetail.dart';
 import 'package:turu_in/widget/ItemTerdekat.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:turu_in/widget/Loading.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -79,7 +81,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
       context,
     );
     log(response.toString());
-    Hotel _hotelDetail = response['detail'];
+    Hotel _hotelDetail = Hotel.fromJson(response['detail']);
     List<dynamic> valuesOther = response['other'];
     List<Hotel> _tempOther = [];
     if (valuesOther.isNotEmpty) {
@@ -102,7 +104,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
   }
 
   Future<void> _openMaps(lat, lon) async {
-    await MapUtils.openMap(lat, lon);
+    await MapUtils.openMap(double.parse(lat), double.parse(lon));
   }
 
   Future<void> _shareLink() async {
@@ -134,536 +136,571 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
         top: false,
         child: Scaffold(
           backgroundColor: customTheme.turuInPrimary,
-          body: NotificationListener(
-            onNotification: _scrollListener,
-            child: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          body: _isLoading
+              ? Loading()
+              : NotificationListener(
+                  onNotification: _scrollListener,
+                  child: Stack(
                     children: [
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          FxContainer(
-                            color: Colors.transparent,
-                            paddingAll: 0,
-                            borderRadiusAll: 0,
-                            clipBehavior: Clip.hardEdge,
-                            marginAll: 0,
-                            height: MediaQuery.of(context).size.width * 0.95,
-                            width: MediaQuery.of(context).size.width,
-                            child: PageView.builder(
-                              controller: _pageController,
-                              itemCount: 4,
-                              itemBuilder: (context, index) {
-                                return ImageDetail(
-                                    image:
-                                        "https://i.ibb.co/nfNN921/Rectangle-15.png");
-                              },
+                      SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                FxContainer(
+                                  color: Colors.transparent,
+                                  paddingAll: 0,
+                                  borderRadiusAll: 0,
+                                  clipBehavior: Clip.hardEdge,
+                                  marginAll: 0,
+                                  height:
+                                      MediaQuery.of(context).size.width * 0.95,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: PageView.builder(
+                                    controller: _pageController,
+                                    itemCount: 4,
+                                    itemBuilder: (context, index) {
+                                      return ImageDetail(
+                                          image: _detail.innerImage);
+                                    },
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: SmoothPageIndicator(
+                                        controller: _pageController,
+                                        count: 4,
+                                        effect: ExpandingDotsEffect(
+                                          dotHeight: 8,
+                                          dotWidth: 8,
+                                          dotColor: Colors.white54,
+                                          activeDotColor: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 30,
+                                      width:
+                                          MediaQuery.of(context).size.width / 3,
+                                      margin: EdgeInsets.only(bottom: 0),
+                                      padding: EdgeInsets.only(top: 10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8),
+                                        ),
+                                        color: customTheme.turuInPrimary,
+                                      ),
+                                      child: Center(
+                                        child: FxText.labelLarge(
+                                          formatRupiah(_detail.price!) +
+                                              '/bulan',
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: SmoothPageIndicator(
-                                  controller: _pageController,
-                                  count: 4,
-                                  effect: ExpandingDotsEffect(
-                                    dotHeight: 8,
-                                    dotWidth: 8,
-                                    dotColor: Colors.white54,
-                                    activeDotColor: Colors.white,
-                                  ),
+                            FxContainer(
+                                padding: const EdgeInsets.only(
+                                  top: 20,
+                                  left: 23,
+                                  right: 23,
+                                  bottom: 16,
                                 ),
+                                color: customTheme.turuInPrimary,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        FxText.titleLarge(
+                                          _detail.name!,
+                                          color: Colors.white,
+                                          fontWeight: 600,
+                                        ),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.grade,
+                                              color: Colors.yellow,
+                                              size: 20,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            FxText.labelLarge(
+                                              "4.8",
+                                              color: Colors.white,
+                                              fontWeight: 700,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    FxButton.rounded(
+                                      backgroundColor:
+                                          customTheme.turuInSecondary,
+                                      elevation: 0,
+                                      onPressed: () {},
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FxText.labelMedium(
+                                            "Simpan",
+                                            color: Colors.white,
+                                            fontWeight: 600,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.turned_in,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                            FxContainer(
+                              padding: const EdgeInsets.only(
+                                top: 16,
+                                left: 23,
+                                right: 23,
+                                bottom: 16,
                               ),
-                              Container(
-                                height: 30,
-                                width: MediaQuery.of(context).size.width / 3,
-                                margin: EdgeInsets.only(bottom: 0),
-                                padding: EdgeInsets.only(top: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8),
-                                  ),
-                                  color: customTheme.turuInPrimary,
+                              color: customTheme.turuInPrimary,
+                              child: Card(
+                                elevation: 0,
+                                color: customTheme.turuInSecondary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
                                 ),
-                                child: Center(
-                                  child: FxText.labelLarge(
-                                    "IDR 500K/bulan",
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      FxContainer(
-                          padding: const EdgeInsets.only(
-                            top: 20,
-                            left: 23,
-                            right: 23,
-                            bottom: 16,
-                          ),
-                          color: customTheme.turuInPrimary,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  FxText.titleLarge(
-                                    'Kost Haji Apud',
-                                    color: Colors.white,
-                                    fontWeight: 600,
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(26.0),
+                                  child: Row(
                                     children: [
-                                      Icon(
-                                        Icons.grade,
-                                        color: Colors.yellow,
-                                        size: 20,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .signal_wifi_statusbar_null,
+                                                color: Colors.white,
+                                                size: 26,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              FxText.labelMedium(
+                                                _fasilitas.wifi! + " mbps",
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.aspect_ratio,
+                                                color: Colors.white,
+                                                size: 26,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              FxText.labelMedium(
+                                                _fasilitas.room! + " m",
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      FxText.labelLarge(
-                                        "4.8",
-                                        color: Colors.white,
-                                        fontWeight: 700,
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.person_outline,
+                                                color: Colors.white,
+                                                size: 26,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              FxText.labelMedium(
+                                                _fasilitas.gender == "male"
+                                                    ? "Putra"
+                                                    : _fasilitas.gender ==
+                                                            "female"
+                                                        ? "Putri"
+                                                        : "Campur",
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.bathtub_outlined,
+                                                color: Colors.white,
+                                                size: 26,
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              FxText.labelMedium(
+                                                _fasilitas.bathroom == "outside"
+                                                    ? "KM luar"
+                                                    : "KM Dalam",
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ),
                                     ],
                                   ),
+                                ),
+                              ),
+                            ),
+                            FxContainer(
+                              padding: const EdgeInsets.only(
+                                top: 16,
+                                left: 23,
+                                right: 23,
+                                bottom: 16,
+                              ),
+                              color: customTheme.turuInPrimary,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: Colors.white,
+                                    size: 35,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: FxText.labelMedium(
+                                      _detail.address!,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ],
                               ),
-                              FxButton.rounded(
-                                backgroundColor: customTheme.turuInSecondary,
-                                elevation: 0,
-                                onPressed: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FxText.labelMedium(
-                                      "Simpan",
-                                      color: Colors.white,
-                                      fontWeight: 600,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Icon(
-                                      Icons.turned_in,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ],
-                                ),
+                            ),
+                            FxContainer(
+                              padding: const EdgeInsets.only(
+                                top: 16,
+                                left: 23,
+                                right: 23,
+                                bottom: 10,
                               ),
-                            ],
-                          )),
-                      FxContainer(
-                        padding: const EdgeInsets.only(
-                          top: 16,
-                          left: 23,
-                          right: 23,
-                          bottom: 16,
+                              color: customTheme.turuInPrimary,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 3.7,
+                                    child: FxButton.rounded(
+                                      backgroundColor:
+                                          customTheme.turuInSecondary,
+                                      elevation: 0,
+                                      onPressed: () {
+                                        _openMaps(_detail.latitude,
+                                            _detail.longitude);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FxText.labelMedium(
+                                            "Maps",
+                                            color: Colors.white,
+                                            fontWeight: 600,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Image.asset(
+                                            "assets/gmaps.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 3.7,
+                                    child: FxButton.rounded(
+                                      backgroundColor:
+                                          customTheme.turuInSecondary,
+                                      elevation: 0,
+                                      onPressed: () {},
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FxText.labelMedium(
+                                            "Gojek",
+                                            color: Colors.white,
+                                            fontWeight: 600,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Image.asset(
+                                            "assets/gojek.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 3.7,
+                                    child: FxButton.rounded(
+                                      backgroundColor:
+                                          customTheme.turuInSecondary,
+                                      elevation: 0,
+                                      onPressed: () {},
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FxText.labelMedium(
+                                            "Grab",
+                                            color: Colors.white,
+                                            fontWeight: 600,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Image.asset(
+                                            "assets/grab.png",
+                                            height: 20,
+                                            width: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            FxContainer(
+                              padding: const EdgeInsets.only(
+                                top: 0,
+                                left: 23,
+                                right: 23,
+                                bottom: 10,
+                              ),
+                              color: customTheme.turuInPrimary,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 9.1,
+                                    height: 45,
+                                    child: FxButton.rounded(
+                                      padding: const EdgeInsets.all(0),
+                                      backgroundColor:
+                                          customTheme.turuInSecondary,
+                                      elevation: 0,
+                                      onPressed: () {
+                                        _shareLink();
+                                      },
+                                      child: Icon(
+                                        Icons.share,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width / 9.1,
+                                    height: 45,
+                                    child: FxButton.rounded(
+                                      padding: const EdgeInsets.all(0),
+                                      backgroundColor:
+                                          customTheme.turuInSecondary,
+                                      elevation: 0,
+                                      onPressed: () {},
+                                      child: Icon(
+                                        Icons.message_outlined,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width /
+                                        1.68,
+                                    height: 45,
+                                    child: FxButton.rounded(
+                                      backgroundColor:
+                                          customTheme.turuInTersier,
+                                      elevation: 0,
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, Routes.Booking);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          FxText.labelMedium(
+                                            "Booking, turu...",
+                                            color: Colors.white,
+                                            fontWeight: 600,
+                                            fontSize: 15,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            FxContainer(
+                              padding: const EdgeInsets.only(
+                                top: 21,
+                                left: 25,
+                                right: 22,
+                                bottom: 16,
+                              ),
+                              color: customTheme.turuInPrimary,
+                              child: FxText.titleLarge(
+                                "Lainnya",
+                                color: Colors.white,
+                                fontWeight: 700,
+                                fontSize: 17,
+                              ),
+                            ),
+                            SizedBox(
+                              // height: MediaQuery.of(context).size.width * 0.45,
+                              child: ListView.builder(
+                                itemCount: _otherHotels.length,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                physics: const ClampingScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  var otherHotel = _otherHotels[index];
+                                  return ItemTerdekat(
+                                    available: otherHotel.totalRooms!,
+                                    nama: otherHotel.name!,
+                                    alamat: otherHotel.districtName! +
+                                        ', ' +
+                                        otherHotel.cityName!,
+                                    image: otherHotel.image!,
+                                    fasilitas: Fasilitas(
+                                      wifi: "20",
+                                      room: "3 x 3",
+                                      gender: "male",
+                                      bathroom: "inside",
+                                    ),
+                                    item: otherHotel,
+                                    showDistance: false,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
                         ),
-                        color: customTheme.turuInPrimary,
-                        child: Card(
-                          elevation: 0,
-                          color: customTheme.turuInSecondary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(26.0),
-                            child: Row(
+                      ),
+                      Container(
+                        height: 100,
+                        child: AnimatedBuilder(
+                          animation: _ColorAnimationController,
+                          builder: (context, child) => AppBar(
+                            systemOverlayStyle: SystemUiOverlayStyle(
+                              // Status bar color
+                              statusBarColor: Colors.transparent,
+                              // Status bar brightness (optional)
+                              statusBarIconBrightness: Brightness.light,
+                            ),
+                            backgroundColor: _colorTween.value,
+                            automaticallyImplyLeading: false,
+                            elevation: 0,
+                            title: Row(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.signal_wifi_statusbar_null,
-                                          color: Colors.white,
-                                          size: 26,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        FxText.labelMedium(
-                                          _fasilitas.wifi! + " mbps",
-                                          color: Colors.white,
-                                        ),
-                                      ],
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    height: 44,
+                                    width: 44,
+                                    margin: EdgeInsets.only(
+                                        left: 5, top: 10, bottom: 10),
+                                    padding: EdgeInsets.only(left: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: _bgColor.value,
                                     ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.aspect_ratio,
-                                          color: Colors.white,
-                                          size: 26,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        FxText.labelMedium(
-                                          _fasilitas.room! + " m",
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(width: 20),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.person_outline,
-                                          color: Colors.white,
-                                          size: 26,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        FxText.labelMedium(
-                                          _fasilitas.gender == "male"
-                                              ? "Putra"
-                                              : _fasilitas.gender == "female"
-                                                  ? "Putri"
-                                                  : "Campur",
-                                          color: Colors.white,
-                                        ),
-                                      ],
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: _iconColor.value,
+                                      ),
                                     ),
-                                    SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.bathtub_outlined,
-                                          color: Colors.white,
-                                          size: 26,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        FxText.labelMedium(
-                                          _fasilitas.bathroom == "outside"
-                                              ? "KM luar"
-                                              : "KM Dalam",
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    )
-                                  ],
+                                  ),
                                 ),
+                                const SizedBox(width: 10),
+                                FxText.labelLarge(
+                                  "Kost Haji Apid",
+                                  color: _colorText.value,
+                                  fontWeight: 800,
+                                  fontSize: 20,
+                                )
                               ],
                             ),
                           ),
                         ),
                       ),
-                      FxContainer(
-                        padding: const EdgeInsets.only(
-                          top: 16,
-                          left: 23,
-                          right: 23,
-                          bottom: 16,
-                        ),
-                        color: customTheme.turuInPrimary,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: Colors.white,
-                              size: 35,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: FxText.labelMedium(
-                                "Jl. Raya Cikarang No.1, Cikarang Utara, Cikarang, Bekasi, Jawa Barat, Indonesia",
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      FxContainer(
-                        padding: const EdgeInsets.only(
-                          top: 16,
-                          left: 23,
-                          right: 23,
-                          bottom: 10,
-                        ),
-                        color: customTheme.turuInPrimary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 3.7,
-                              child: FxButton.rounded(
-                                backgroundColor: customTheme.turuInSecondary,
-                                elevation: 0,
-                                onPressed: () {
-                                  _openMaps(-3.823216, -38.481700);
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FxText.labelMedium(
-                                      "Maps",
-                                      color: Colors.white,
-                                      fontWeight: 600,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Image.asset(
-                                      "assets/gmaps.png",
-                                      height: 20,
-                                      width: 20,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 3.7,
-                              child: FxButton.rounded(
-                                backgroundColor: customTheme.turuInSecondary,
-                                elevation: 0,
-                                onPressed: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FxText.labelMedium(
-                                      "Gojek",
-                                      color: Colors.white,
-                                      fontWeight: 600,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Image.asset(
-                                      "assets/gojek.png",
-                                      height: 20,
-                                      width: 20,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 3.7,
-                              child: FxButton.rounded(
-                                backgroundColor: customTheme.turuInSecondary,
-                                elevation: 0,
-                                onPressed: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FxText.labelMedium(
-                                      "Grab",
-                                      color: Colors.white,
-                                      fontWeight: 600,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Image.asset(
-                                      "assets/grab.png",
-                                      height: 20,
-                                      width: 20,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      FxContainer(
-                        padding: const EdgeInsets.only(
-                          top: 0,
-                          left: 23,
-                          right: 23,
-                          bottom: 10,
-                        ),
-                        color: customTheme.turuInPrimary,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 9.1,
-                              height: 45,
-                              child: FxButton.rounded(
-                                padding: const EdgeInsets.all(0),
-                                backgroundColor: customTheme.turuInSecondary,
-                                elevation: 0,
-                                onPressed: () {
-                                  _shareLink();
-                                },
-                                child: Icon(
-                                  Icons.share,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 9.1,
-                              height: 45,
-                              child: FxButton.rounded(
-                                padding: const EdgeInsets.all(0),
-                                backgroundColor: customTheme.turuInSecondary,
-                                elevation: 0,
-                                onPressed: () {},
-                                child: Icon(
-                                  Icons.message_outlined,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 1.68,
-                              height: 45,
-                              child: FxButton.rounded(
-                                backgroundColor: customTheme.turuInTersier,
-                                elevation: 0,
-                                onPressed: () {
-                                  Navigator.pushNamed(context, Routes.Booking);
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    FxText.labelMedium(
-                                      "Booking, turu...",
-                                      color: Colors.white,
-                                      fontWeight: 600,
-                                      fontSize: 15,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      FxContainer(
-                        padding: const EdgeInsets.only(
-                          top: 21,
-                          left: 25,
-                          right: 22,
-                          bottom: 16,
-                        ),
-                        color: customTheme.turuInPrimary,
-                        child: FxText.titleLarge(
-                          "Lainnya",
-                          color: Colors.white,
-                          fontWeight: 700,
-                          fontSize: 17,
-                        ),
-                      ),
-                      SizedBox(
-                        // height: MediaQuery.of(context).size.width * 0.45,
-                        child: ListView.builder(
-                          itemCount: _otherHotels.length,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            var otherHotel = _otherHotels[index];
-                            return ItemTerdekat(
-                              available: otherHotel.totalRooms!,
-                              nama: otherHotel.name!,
-                              alamat: otherHotel.districtName! +
-                                  ', ' +
-                                  otherHotel.cityName!,
-                              image: otherHotel.image!,
-                              fasilitas: Fasilitas(
-                                wifi: "20",
-                                room: "3 x 3",
-                                gender: "male",
-                                bathroom: "inside",
-                              ),
-                              item: otherHotel,
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
-                Container(
-                  height: 100,
-                  child: AnimatedBuilder(
-                    animation: _ColorAnimationController,
-                    builder: (context, child) => AppBar(
-                      systemOverlayStyle: SystemUiOverlayStyle(
-                        // Status bar color
-                        statusBarColor: Colors.transparent,
-                        // Status bar brightness (optional)
-                        statusBarIconBrightness: Brightness.light,
-                      ),
-                      backgroundColor: _colorTween.value,
-                      automaticallyImplyLeading: false,
-                      elevation: 0,
-                      title: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              height: 44,
-                              width: 44,
-                              margin:
-                                  EdgeInsets.only(left: 5, top: 10, bottom: 10),
-                              padding: EdgeInsets.only(left: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: _bgColor.value,
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.arrow_back_ios,
-                                  color: _iconColor.value,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          FxText.labelLarge(
-                            "Kost Haji Apid",
-                            color: _colorText.value,
-                            fontWeight: 800,
-                            fontSize: 20,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

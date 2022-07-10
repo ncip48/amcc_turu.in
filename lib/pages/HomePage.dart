@@ -242,6 +242,7 @@ class _HomePageState extends State<HomePage> {
                                   ', ' +
                                   recomendHotel.cityName!,
                               image: recomendHotel.image!,
+                              item: recomendHotel,
                             );
                           },
                         ),
@@ -284,6 +285,7 @@ class _HomePageState extends State<HomePage> {
                                 bathroom: "inside",
                               ),
                               item: nearbyHotel,
+                              showDistance: true,
                             );
                           },
                         ),
