@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutx/flutx.dart';
 import 'package:flutx/widgets/text/text.dart';
+import 'package:get/get.dart';
 import 'package:turu_in/model/Fasilitas.dart';
+import 'package:turu_in/model/Hotel.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 
@@ -12,13 +14,15 @@ class ItemTerdekat extends StatelessWidget {
   final String alamat;
   final String image;
   final Fasilitas fasilitas;
+  final Hotel item;
 
   ItemTerdekat(
       {required this.available,
       required this.nama,
       required this.alamat,
       required this.image,
-      required this.fasilitas});
+      required this.fasilitas,
+      required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,7 @@ class ItemTerdekat extends StatelessWidget {
       focusColor: CustomTheme().turuInPrimary,
       highlightColor: CustomTheme().turuInPrimary,
       onTap: () {
-        Navigator.pushNamed(context, Routes.Detail, arguments: fasilitas);
+        Get.toNamed(Routes.Detail, arguments: item);
       },
       child: Card(
         shape: RoundedRectangleBorder(

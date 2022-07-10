@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turu_in/model/Fasilitas.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
@@ -42,6 +43,12 @@ class _ProfilPageState extends State<ProfilPage> with TickerProviderStateMixin {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+  }
+
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('user');
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.Signin, (r) => false);
   }
 
   @override
@@ -235,7 +242,7 @@ class _ProfilPageState extends State<ProfilPage> with TickerProviderStateMixin {
                       backgroundColor: customTheme.turuInTersier,
                       elevation: 0,
                       onPressed: () {
-                        Navigator.pushNamed(context, Routes.Signin);
+                        _logout();
                       },
                       child: FxText.labelMedium(
                         "Logout",

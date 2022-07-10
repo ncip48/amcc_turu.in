@@ -1,8 +1,15 @@
 // ignore_for_file: unused_field, prefer_final_fields, prefer_const_constructors, file_names
 
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turu_in/config/config.dart';
+import 'package:turu_in/model/Auth.dart';
 import 'package:turu_in/routes/routes.dart';
+import 'package:turu_in/theme/app_theme.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -15,6 +22,34 @@ class _SigninPageState extends State<SigninPage> {
   bool _secureText1 = false;
   bool _secureText2 = false;
   bool isChecked = false;
+  bool _isLoading = false;
+  String _email = '';
+  String _password = '';
+
+  Future<void> _actionLogin() async {
+    FocusManager.instance.primaryFocus!.unfocus();
+    setState(() {
+      _isLoading = true;
+    });
+    var body =
+        jsonEncode(<String, String>{'email': _email, 'password': _password});
+    final response = await getRequestAPI('auth/login', 'post', body, context);
+    log('response ~> ' + response.toString());
+    if (response != null) {
+      Auth auth = Auth.fromJson(response);
+      _savePreferences(auth);
+      Navigator.of(context).pushReplacementNamed(Routes.Home);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _savePreferences(Auth user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('user', jsonEncode(user));
+  }
+
   @override
   Widget build(BuildContext context) {
     Color getColor(Set<MaterialState> states) {
@@ -96,12 +131,17 @@ class _SigninPageState extends State<SigninPage> {
             child: TextField(
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
               decoration: InputDecoration(
-                  fillColor: Color(0xff3E4553),
-                  filled: true,
-                  hintText: 'Masukkan email..',
-                  hintStyle: GoogleFonts.openSans(color: Color(0xff6F7075)),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+                fillColor: Color(0xff3E4553),
+                filled: true,
+                hintText: 'Masukkan email..',
+                hintStyle: GoogleFonts.openSans(color: Color(0xff6F7075)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: (value) {
+                _email = value;
+              },
             ),
           ),
           Padding(
@@ -124,22 +164,27 @@ class _SigninPageState extends State<SigninPage> {
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
               obscureText: _secureText1,
               decoration: InputDecoration(
-                  fillColor: Color(0xff3E4553),
-                  filled: true,
-                  hintText: 'Masukkan password..',
-                  hintStyle: GoogleFonts.openSans(color: Color(0xff6F7075)),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _secureText1 = !_secureText1;
-                      });
-                    },
-                    icon: Icon(_secureText1
-                        ? Icons.visibility
-                        : Icons.visibility_off_rounded),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10))),
+                fillColor: Color(0xff3E4553),
+                filled: true,
+                hintText: 'Masukkan password..',
+                hintStyle: GoogleFonts.openSans(color: Color(0xff6F7075)),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _secureText1 = !_secureText1;
+                    });
+                  },
+                  icon: Icon(_secureText1
+                      ? Icons.visibility
+                      : Icons.visibility_off_rounded),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onChanged: (value) {
+                _password = value;
+              },
             ),
           ),
           SizedBox(height: mainSize.height * 0.015),
@@ -174,15 +219,23 @@ class _SigninPageState extends State<SigninPage> {
                   borderRadius: BorderRadius.circular(10)),
               child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.Home);
+                    _isLoading ? null : _actionLogin();
                   },
-                  child: Text(
-                    'Login',
-                    style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
-                  ))),
+                  child: _isLoading
+                      ? SizedBox(
+                          child: CircularProgressIndicator(
+                            color: CustomTheme().cookifyOnPrimary,
+                          ),
+                          height: 15,
+                          width: 15,
+                        )
+                      : Text(
+                          'Login',
+                          style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500),
+                        ))),
           SizedBox(
             height: mainSize.height * 0.024,
           ),

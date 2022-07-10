@@ -206,6 +206,42 @@ class _EditProfilPageState extends State<EditProfilPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           FxText.labelMedium(
+                            "No HP",
+                            color: Colors.white,
+                          ),
+                          SizedBox(height: 5),
+                          FxTextField(
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            autoFocusedBorder: true,
+                            textFieldStyle: FxTextFieldStyle.outlined,
+                            textFieldType: FxTextFieldType.mobileNumber,
+                            filled: true,
+                            fillColor: customTheme.turuInSecondary,
+                            enabledBorderColor: customTheme.turuInSecondary,
+                            focusedBorderColor: customTheme.turuInSecondary,
+                            prefixIconColor: customTheme.cookifyOnPrimary,
+                            labelTextColor: customTheme.cookifyOnPrimary,
+                            cursorColor: customTheme.cookifyOnPrimary,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                FxContainer(
+                  padding: const EdgeInsets.only(
+                    top: 0,
+                    bottom: 16,
+                    left: 23,
+                    right: 23,
+                  ),
+                  color: customTheme.turuInPrimary,
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FxText.labelMedium(
                             "Tanggal Lahir",
                             color: Colors.white,
                           ),

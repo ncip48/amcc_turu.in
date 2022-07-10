@@ -2,10 +2,16 @@
 
 // import 'dart:developer';
 
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
+import 'package:get/get.dart';
+import 'package:turu_in/config/config.dart';
 import 'package:turu_in/model/Fasilitas.dart';
+import 'package:turu_in/model/Hotel.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:turu_in/utils/MapUtils.dart';
@@ -35,6 +41,10 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
     gender: "male",
     bathroom: "outside",
   );
+  final Hotel prevState = Get.arguments;
+  bool _isLoading = true;
+  Hotel _detail = Hotel();
+  List<Hotel> _otherHotels = [];
 
   @override
   void initState() {
@@ -55,6 +65,40 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
 
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+    _getDetail();
+  }
+
+  Future<void> _getDetail() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final response = await getRequestAPI(
+      'hotel/${prevState.id}',
+      'get',
+      null,
+      context,
+    );
+    log(response.toString());
+    Hotel _hotelDetail = response['detail'];
+    List<dynamic> valuesOther = response['other'];
+    List<Hotel> _tempOther = [];
+    if (valuesOther.isNotEmpty) {
+      for (int i = 0; i < valuesOther.length; i++) {
+        if (valuesOther[i] != null) {
+          Map<String, dynamic> map = valuesOther[i];
+          _tempOther.add(Hotel.fromJson(map));
+          // log('Id-------${map['id']}');
+        }
+      }
+    }
+    if (kDebugMode) {
+      print(_tempOther.length);
+    }
+    setState(() {
+      _detail = _hotelDetail;
+      _otherHotels = _tempOther;
+      _isLoading = false;
+    });
   }
 
   Future<void> _openMaps(lat, lon) async {
@@ -538,56 +582,29 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                       ),
                       SizedBox(
                         // height: MediaQuery.of(context).size.width * 0.45,
-                        child: ListView(
+                        child: ListView.builder(
+                          itemCount: _otherHotels.length,
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           physics: const ClampingScrollPhysics(),
                           shrinkWrap: true,
-                          children: [
-                            ItemTerdekat(
-                              available: 5,
-                              nama: 'Kost Haji Apud',
-                              alamat: 'Ngemplak, Sleman',
-                              image: "https://i.ibb.co/VSX1tnJ/Rectangle-9.png",
+                          itemBuilder: (context, index) {
+                            var otherHotel = _otherHotels[index];
+                            return ItemTerdekat(
+                              available: otherHotel.totalRooms!,
+                              nama: otherHotel.name!,
+                              alamat: otherHotel.districtName! +
+                                  ', ' +
+                                  otherHotel.cityName!,
+                              image: otherHotel.image!,
                               fasilitas: Fasilitas(
-                                  wifi: "20",
-                                  room: "3 x 3",
-                                  gender: "male",
-                                  bathroom: "inside"),
-                            ),
-                            ItemTerdekat(
-                              available: 10,
-                              nama: 'Kost Haji Apud',
-                              alamat: 'Ngemplak, Sleman',
-                              image: "https://i.ibb.co/VSX1tnJ/Rectangle-9.png",
-                              fasilitas: Fasilitas(
-                                  wifi: "20",
-                                  room: "3 x 3",
-                                  gender: "female",
-                                  bathroom: "inside"),
-                            ),
-                            ItemTerdekat(
-                              available: 5,
-                              nama: 'Kost Haji Apud',
-                              alamat: 'Ngemplak, Sleman',
-                              image: "https://i.ibb.co/VSX1tnJ/Rectangle-9.png",
-                              fasilitas: Fasilitas(
-                                  wifi: "20",
-                                  room: "3 x 3",
-                                  gender: "male",
-                                  bathroom: "inside"),
-                            ),
-                            ItemTerdekat(
-                              available: 5,
-                              nama: 'Kost Haji Apud',
-                              alamat: 'Ngemplak, Sleman',
-                              image: "https://i.ibb.co/VSX1tnJ/Rectangle-9.png",
-                              fasilitas: Fasilitas(
-                                  wifi: "20",
-                                  room: "3 x 3",
-                                  gender: "male",
-                                  bathroom: "inside"),
-                            ),
-                          ],
+                                wifi: "20",
+                                room: "3 x 3",
+                                gender: "male",
+                                bathroom: "inside",
+                              ),
+                              item: otherHotel,
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 20),
