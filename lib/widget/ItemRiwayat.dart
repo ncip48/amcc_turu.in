@@ -179,9 +179,11 @@ class ItemRiwayat extends StatelessWidget {
                             image: AssetImage(
                               item.payment == 'gopay'
                                   ? 'assets/gojek.png'
-                                  : item.payment == 'ovo'
-                                      ? 'assets/ovo.png'
-                                      : 'assets/money.png',
+                                  : item.payment == 'dana'
+                                      ? 'assets/dana.png'
+                                      : item.payment == 'ovo'
+                                          ? 'assets/ovo.png'
+                                          : 'assets/money.png',
                             ),
                             height: 20,
                             width: 20,
@@ -190,9 +192,11 @@ class ItemRiwayat extends StatelessWidget {
                           FxText.titleMedium(
                             item.payment == 'gopay'
                                 ? 'GoPay'
-                                : item.payment == 'ovo'
-                                    ? "OVO"
-                                    : "Cash",
+                                : item.payment == 'dana'
+                                    ? "Dana"
+                                    : item.payment == 'ovo'
+                                        ? "OVO"
+                                        : "Cash",
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: 600,

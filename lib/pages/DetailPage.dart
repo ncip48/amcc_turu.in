@@ -585,8 +585,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                           customTheme.turuInTersier,
                                       elevation: 0,
                                       onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, Routes.Booking);
+                                        Get.toNamed(Routes.Booking,
+                                            arguments: _detail,
+                                            preventDuplicates: false);
                                       },
                                       child: Row(
                                         mainAxisAlignment:

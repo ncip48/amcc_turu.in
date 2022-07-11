@@ -5,7 +5,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
+import 'package:get/get.dart';
 import 'package:turu_in/model/Fasilitas.dart';
+import 'package:turu_in/model/Hotel.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:intl/intl.dart';
@@ -37,12 +39,17 @@ class _BookingPageState extends State<BookingPage>
   String _dateTwo = DateFormat('d-M-y').format(DateTime.now());
   DateTime _dateTwoIso = DateTime.now();
   int _value = 0;
+  final Hotel prevState = Get.arguments;
+  int _price = 0;
 
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+    setState(() {
+      _price = prevState.price!;
+    });
   }
 
   Future<void> _selectDate(BuildContext context, int date) async {
@@ -61,6 +68,13 @@ class _BookingPageState extends State<BookingPage>
           _dateTwo = DateFormat('d-M-y').format(d);
           _dateTwoIso = d;
         }
+        var diff = _dateTwoIso.difference(_dateOneIso).inDays;
+        var monthDiff = diff / 30;
+        var month = monthDiff.ceil();
+        var price = prevState.price! * month;
+        setState(() {
+          _price = price;
+        });
       });
   }
 
@@ -113,7 +127,7 @@ class _BookingPageState extends State<BookingPage>
                 ),
                 const SizedBox(width: 10),
                 FxText.labelLarge(
-                  "Kost Haji Apid",
+                  prevState.name!,
                   color: Colors.white,
                   fontWeight: 800,
                   fontSize: 20,
@@ -148,7 +162,7 @@ class _BookingPageState extends State<BookingPage>
                             color: Colors.white,
                             image: DecorationImage(
                               image: NetworkImage(
-                                "https://i.ibb.co/nfNN921/Rectangle-15.png",
+                                prevState.innerImage!,
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -364,7 +378,7 @@ class _BookingPageState extends State<BookingPage>
                             fontSize: 12,
                           ),
                           FxText.labelMedium(
-                            formatRupiah(500000),
+                            formatRupiah(_price),
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: 800,
