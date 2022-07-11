@@ -13,6 +13,7 @@ import 'package:turu_in/model/User.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:intl/intl.dart';
+import 'package:turu_in/widget/Empty.dart';
 import 'package:turu_in/widget/ItemRiwayat.dart';
 import 'package:turu_in/widget/Loading.dart';
 import 'package:turu_in/widget/MenuEwallet.dart';
@@ -139,33 +140,41 @@ class _RiwayatPageState extends State<RiwayatPage>
                   ),
                 ),
                 backgroundColor: customTheme.turuInPrimary,
-                body: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FxContainer(
-                          padding: const EdgeInsets.only(
-                            top: 25,
-                            bottom: 16,
-                          ),
-                          color: customTheme.turuInPrimary,
-                          child: SizedBox(
-                            child: ListView.builder(
-                              itemCount: _bookings.length,
-                              shrinkWrap: true,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              itemBuilder: (context, index) {
-                                var riwayat = _bookings[index];
-                                return ItemRiwayat(
-                                  item: riwayat,
-                                );
-                              },
-                            ),
-                          )),
-                    ],
-                  ),
-                ),
+                body: _bookings.isEmpty
+                    ? Center(
+                        child: Empty(
+                          image:
+                              "https://i.ibb.co/Qv54mFc/3973481-removebg-preview.png",
+                          title: "Belum ada riwayat nih.",
+                        ),
+                      )
+                    : SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FxContainer(
+                                padding: const EdgeInsets.only(
+                                  top: 25,
+                                  bottom: 16,
+                                ),
+                                color: customTheme.turuInPrimary,
+                                child: SizedBox(
+                                  child: ListView.builder(
+                                    itemCount: _bookings.length,
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    itemBuilder: (context, index) {
+                                      var riwayat = _bookings[index];
+                                      return ItemRiwayat(
+                                        item: riwayat,
+                                      );
+                                    },
+                                  ),
+                                )),
+                          ],
+                        ),
+                      ),
               ),
       ),
     );
