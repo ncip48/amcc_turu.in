@@ -11,14 +11,14 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        color: CustomTheme().turuInPrimary,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 child: CircularProgressIndicator(
-                  color: CustomTheme().turuInPrimary,
+                  color: Colors.white,
                 ),
                 height: 25,
                 width: 25,
@@ -27,7 +27,7 @@ class Loading extends StatelessWidget {
               Text(
                 'Tunggu...',
                 style: GoogleFonts.poppins(
-                  color: CustomTheme().turuInPrimary,
+                  color: Colors.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),

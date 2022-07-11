@@ -6,10 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turu_in/config/config.dart';
 import 'package:turu_in/model/Fasilitas.dart';
+import 'package:turu_in/model/User.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:intl/intl.dart';
+import 'package:turu_in/widget/Loading.dart';
 import 'package:turu_in/widget/MenuEwallet.dart';
 import 'package:turu_in/widget/MenuProfil.dart';
 
@@ -37,12 +40,28 @@ class _ProfilPageState extends State<ProfilPage> with TickerProviderStateMixin {
   String _dateTwo = DateFormat('d-M-y').format(DateTime.now());
   DateTime _dateTwoIso = DateTime.now();
   int _value = 0;
+  User _user = User();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final response = await getRequestAPI('profile', 'get', null, context);
+    log(response.toString());
+    User _userDetail = User.fromJson(response);
+    setState(() {
+      _user = _userDetail;
+      _isLoading = false;
+    });
   }
 
   Future<void> _logout() async {
@@ -62,202 +81,209 @@ class _ProfilPageState extends State<ProfilPage> with TickerProviderStateMixin {
       ),
       child: SafeArea(
         top: false,
-        child: Scaffold(
-          appBar: AppBar(
-            systemOverlayStyle: SystemUiOverlayStyle(
-              // Status bar color
-              statusBarColor: customTheme.turuInPrimary,
-              // Status bar brightness (optional)
-              statusBarIconBrightness: Brightness.light,
-            ),
-            backgroundColor: customTheme.turuInPrimary,
-            automaticallyImplyLeading: false,
-            elevation: 0,
-            toolbarHeight: MediaQuery.of(context).size.width / 6,
-            title: Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    height: 44,
-                    width: 44,
-                    margin: EdgeInsets.only(left: 5, top: 10, bottom: 10),
-                    padding: EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: Color.fromRGBO(255, 255, 255, 0.45),
-                    ),
-                    child: Center(
-                      child: Icon(Icons.arrow_back_ios, color: Colors.white),
-                    ),
+        child: _isLoading
+            ? Loading()
+            : Scaffold(
+                appBar: AppBar(
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                    // Status bar color
+                    statusBarColor: customTheme.turuInPrimary,
+                    // Status bar brightness (optional)
+                    statusBarIconBrightness: Brightness.light,
                   ),
-                ),
-                const SizedBox(width: 10),
-                FxText.labelLarge(
-                  "Profile",
-                  color: Colors.white,
-                  fontWeight: 800,
-                  fontSize: 20,
-                )
-              ],
-            ),
-          ),
-          backgroundColor: customTheme.turuInPrimary,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FxContainer(
-                  padding: const EdgeInsets.only(
-                    top: 5,
-                    bottom: 16,
-                  ),
-                  color: customTheme.turuInPrimary,
-                  child: Center(
-                    child: Container(
-                      height: MediaQuery.of(context).size.width / 3.5,
-                      width: MediaQuery.of(context).size.width / 3.5,
-                      alignment: Alignment.bottomRight,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          MediaQuery.of(context).size.width / 2.5,
-                        ),
-                        color: Colors.white,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            "https://media-exp2.licdn.com/dms/image/C5603AQGJgwZuQ3sUMQ/profile-displayphoto-shrink_800_800/0/1601275519734?e=1661990400&v=beta&t=AdTqkzPUK7PMBS8ExaV2pT7e97GzFLEFOkrrbEpmUmU",
-                          ),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: customTheme.turuInSecondary,
-                            borderRadius: BorderRadius.circular(100)),
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                FxContainer(
-                  padding: const EdgeInsets.only(
-                    top: 25,
-                    bottom: 16,
-                  ),
-                  color: customTheme.turuInPrimary,
-                  child: Center(
-                    child: FxText.titleLarge(
-                      "Herly Chahya Putra",
-                      fontSize: 24,
-                      fontWeight: 600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                FxContainer(
-                  padding: const EdgeInsets.only(
-                    top: 25,
-                    bottom: 16,
-                  ),
-                  color: customTheme.turuInPrimary,
-                  child: Column(
+                  backgroundColor: customTheme.turuInPrimary,
+                  automaticallyImplyLeading: false,
+                  elevation: 0,
+                  toolbarHeight: MediaQuery.of(context).size.width / 6,
+                  title: Row(
                     children: [
-                      MenuProfil(
+                      InkWell(
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                         onTap: () {
-                          Navigator.pushNamed(context, Routes.EditProfil);
+                          Navigator.pop(context);
                         },
-                        title: "Edit Profil",
-                        top: true,
-                        bottom: false,
+                        child: Container(
+                          height: 44,
+                          width: 44,
+                          margin: EdgeInsets.only(left: 5, top: 10, bottom: 10),
+                          padding: EdgeInsets.only(left: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: Color.fromRGBO(255, 255, 255, 0.45),
+                          ),
+                          child: Center(
+                            child:
+                                Icon(Icons.arrow_back_ios, color: Colors.white),
+                          ),
+                        ),
                       ),
-                      MenuProfil(
-                        onTap: () {},
-                        title: "Riwayat",
-                        top: false,
-                        bottom: false,
-                      ),
-                      MenuProfil(
-                        onTap: () {},
-                        title: "Pesan",
-                        top: false,
-                        bottom: true,
-                      ),
-                    ],
-                  ),
-                ),
-                FxContainer(
-                  padding: const EdgeInsets.only(
-                    top: 16,
-                    bottom: 16,
-                  ),
-                  color: customTheme.turuInPrimary,
-                  child: Column(
-                    children: [
-                      MenuEwallet(
-                        onTap: () {},
-                        title: "Gopay",
-                        top: true,
-                        bottom: false,
-                        connected: true,
-                        image: "assets/gojek.png",
-                      ),
-                      MenuEwallet(
-                        onTap: () {},
-                        title: "Dana",
-                        top: false,
-                        bottom: false,
-                        connected: false,
-                        image: "assets/dana.png",
-                      ),
-                      MenuEwallet(
-                        onTap: () {},
-                        title: "Ovo",
-                        top: false,
-                        bottom: true,
-                        connected: true,
-                        image: "assets/ovo.png",
-                      ),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: FxContainer(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 27.0,
-                      vertical: 15,
-                    ),
-                    color: customTheme.turuInPrimary,
-                    child: FxButton.rounded(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 70,
-                        vertical: 11,
-                      ),
-                      backgroundColor: customTheme.turuInTersier,
-                      elevation: 0,
-                      onPressed: () {
-                        _logout();
-                      },
-                      child: FxText.labelMedium(
-                        "Logout",
+                      const SizedBox(width: 10),
+                      FxText.labelLarge(
+                        "Profile",
                         color: Colors.white,
-                        fontWeight: 600,
-                        fontSize: 15,
-                      ),
-                    ),
+                        fontWeight: 800,
+                        fontSize: 20,
+                      )
+                    ],
                   ),
                 ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-        ),
+                backgroundColor: customTheme.turuInPrimary,
+                body: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FxContainer(
+                        padding: const EdgeInsets.only(
+                          top: 5,
+                          bottom: 16,
+                        ),
+                        color: customTheme.turuInPrimary,
+                        child: Center(
+                          child: Container(
+                            height: MediaQuery.of(context).size.width / 3.5,
+                            width: MediaQuery.of(context).size.width / 3.5,
+                            alignment: Alignment.bottomRight,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                MediaQuery.of(context).size.width / 2.5,
+                              ),
+                              color: Colors.white,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  _user.image!,
+                                ),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  color: customTheme.turuInSecondary,
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      FxContainer(
+                        padding: const EdgeInsets.only(
+                          top: 25,
+                          bottom: 16,
+                        ),
+                        color: customTheme.turuInPrimary,
+                        child: Center(
+                          child: FxText.titleLarge(
+                            _user.name!,
+                            fontWeight: 900,
+                            fontSize: 23,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      FxContainer(
+                        padding: const EdgeInsets.only(
+                          top: 25,
+                          bottom: 16,
+                        ),
+                        color: customTheme.turuInPrimary,
+                        child: Column(
+                          children: [
+                            MenuProfil(
+                              onTap: () {
+                                Navigator.pushNamed(context, Routes.EditProfil);
+                              },
+                              title: "Edit Profil",
+                              top: true,
+                              bottom: false,
+                            ),
+                            MenuProfil(
+                              onTap: () {},
+                              title: "Riwayat",
+                              top: false,
+                              bottom: false,
+                            ),
+                            MenuProfil(
+                              onTap: () {},
+                              title: "Pesan",
+                              top: false,
+                              bottom: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                      FxContainer(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          bottom: 16,
+                        ),
+                        color: customTheme.turuInPrimary,
+                        child: Column(
+                          children: [
+                            MenuEwallet(
+                              onTap: () {},
+                              title: "Gopay",
+                              top: true,
+                              bottom: false,
+                              connected: true,
+                              image: "assets/gojek.png",
+                            ),
+                            MenuEwallet(
+                              onTap: () {},
+                              title: "Dana",
+                              top: false,
+                              bottom: false,
+                              connected: false,
+                              image: "assets/dana.png",
+                            ),
+                            MenuEwallet(
+                              onTap: () {},
+                              title: "Ovo",
+                              top: false,
+                              bottom: true,
+                              connected: true,
+                              image: "assets/ovo.png",
+                            ),
+                          ],
+                        ),
+                      ),
+                      Center(
+                        child: FxContainer(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 27.0,
+                            vertical: 15,
+                          ),
+                          color: customTheme.turuInPrimary,
+                          child: FxButton.rounded(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 70,
+                              vertical: 11,
+                            ),
+                            backgroundColor: customTheme.turuInTersier,
+                            elevation: 0,
+                            onPressed: () {
+                              _logout();
+                            },
+                            child: FxText.labelMedium(
+                              "Logout",
+                              color: Colors.white,
+                              fontWeight: 600,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
       ),
     );
   }

@@ -90,6 +90,10 @@ class _BookingPageState extends State<BookingPage>
             title: Row(
               children: [
                 InkWell(
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
                   onTap: () {
                     Navigator.pop(context);
                   },

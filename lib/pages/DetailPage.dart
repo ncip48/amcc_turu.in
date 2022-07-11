@@ -315,7 +315,8 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                                 width: 10,
                                               ),
                                               FxText.labelMedium(
-                                                _fasilitas.wifi! + " mbps",
+                                                _detail.facilities!.wifi! +
+                                                    " mbps",
                                                 color: Colors.white,
                                               ),
                                             ],
@@ -332,7 +333,8 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                                 width: 10,
                                               ),
                                               FxText.labelMedium(
-                                                _fasilitas.room! + " m",
+                                                _detail.facilities!.room! +
+                                                    " m",
                                                 color: Colors.white,
                                               ),
                                             ],
@@ -355,9 +357,11 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                                 width: 10,
                                               ),
                                               FxText.labelMedium(
-                                                _fasilitas.gender == "male"
+                                                _detail.facilities!.type ==
+                                                        "male"
                                                     ? "Putra"
-                                                    : _fasilitas.gender ==
+                                                    : _detail.facilities!
+                                                                .type ==
                                                             "female"
                                                         ? "Putri"
                                                         : "Campur",
@@ -377,7 +381,8 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                                 width: 10,
                                               ),
                                               FxText.labelMedium(
-                                                _fasilitas.bathroom == "outside"
+                                                _detail.facilities!.bathroom ==
+                                                        "outside"
                                                     ? "KM luar"
                                                     : "KM Dalam",
                                                 color: Colors.white,
@@ -633,11 +638,11 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                         otherHotel.cityName!,
                                     image: otherHotel.image!,
                                     fasilitas: Fasilitas(
-                                      wifi: "20",
-                                      room: "3 x 3",
-                                      gender: "male",
-                                      bathroom: "inside",
-                                    ),
+                                        wifi: otherHotel.facilities!.wifi,
+                                        room: otherHotel.facilities!.room,
+                                        gender: otherHotel.facilities!.type,
+                                        bathroom:
+                                            otherHotel.facilities!.bathroom),
                                     item: otherHotel,
                                     showDistance: false,
                                   );
@@ -665,6 +670,10 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                             title: Row(
                               children: [
                                 InkWell(
+                                  hoverColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
                                   onTap: () {
                                     Navigator.pop(context);
                                   },
@@ -688,7 +697,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                                 ),
                                 const SizedBox(width: 10),
                                 FxText.labelLarge(
-                                  "Kost Haji Apid",
+                                  _detail.name!,
                                   color: _colorText.value,
                                   fontWeight: 800,
                                   fontSize: 20,
