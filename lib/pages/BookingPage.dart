@@ -41,6 +41,7 @@ class _BookingPageState extends State<BookingPage>
   int _value = 0;
   final Hotel prevState = Get.arguments;
   int _price = 0;
+  int _durasi = 1;
 
   @override
   void initState() {
@@ -72,9 +73,8 @@ class _BookingPageState extends State<BookingPage>
         var monthDiff = diff / 30;
         var month = monthDiff.ceil();
         var price = prevState.price! * month;
-        setState(() {
-          _price = price;
-        });
+        _price = price;
+        _durasi = month;
       });
   }
 
@@ -377,11 +377,21 @@ class _BookingPageState extends State<BookingPage>
                             color: Colors.white,
                             fontSize: 12,
                           ),
-                          FxText.labelMedium(
-                            formatRupiah(_price),
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: 800,
+                          Row(
+                            children: [
+                              FxText.labelMedium(
+                                formatRupiah(_price),
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: 800,
+                              ),
+                              SizedBox(width: 5),
+                              FxText.labelMedium(
+                                '(${_durasi} bulan)',
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ],
                           ),
                         ],
                       ),
