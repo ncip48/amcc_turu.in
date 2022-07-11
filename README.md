@@ -1,5 +1,8 @@
-## Penggunaan warna dan widget ada di Splash, Example, Home
+## Readme
 
-## di folder lib/pages
+### Instalation
 
-## misal CustomTheme().turuInPrimary ada turuInPrimary, turuInSecondary, sama turuInTersier
+1. flutter pub get
+2. run with --no-sound-null-safety
+3. login with email=herly@gmail.com or user@gmail.com and password=password for all users
+4. enjoy ^^
