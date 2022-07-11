@@ -108,7 +108,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
   }
 
   Future<void> _shareLink() async {
-    Share.share("Temukan kost haji apud di turu.in/s/123");
+    Share.share("Temukan ${_detail.name ?? '-'} di turu.in/s/${_detail.id}");
   }
 
   @override
