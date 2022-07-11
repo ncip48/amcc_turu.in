@@ -50,8 +50,9 @@ class _HomePageState extends State<HomePage> {
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     _colorStatusBar = customTheme.turuInPrimary;
-    _getHome();
+    // _getHome();
     // _getLocation();
+    // -7.393864&lon=111.442274
   }
 
   _checkGps() async {
@@ -98,6 +99,7 @@ class _HomePageState extends State<HomePage> {
     lat = position.latitude.toString();
 
     _getLocation(lat, long);
+    _getHome(lat, long);
   }
 
   Future<void> _getLocation(String lat, String lon) async {
@@ -119,12 +121,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _getHome() async {
+  Future<void> _getHome(String lat, String lon) async {
     setState(() {
       _isLoading = true;
     });
     final response = await getRequestAPI(
-      'home?lat=-7.393864&lon=111.442274',
+      'home?lat=' + lat + '&lon=' + lon,
       'get',
       null,
       context,

@@ -5,19 +5,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutx/flutx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turu_in/config/config.dart';
 import 'package:turu_in/model/Booking.dart';
 import 'package:turu_in/model/Fasilitas.dart';
 import 'package:turu_in/model/User.dart';
-import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:turu_in/widget/Empty.dart';
 import 'package:turu_in/widget/ItemRiwayat.dart';
 import 'package:turu_in/widget/Loading.dart';
-import 'package:turu_in/widget/MenuEwallet.dart';
-import 'package:turu_in/widget/MenuProfil.dart';
 
 class RiwayatPage extends StatefulWidget {
   const RiwayatPage({Key? key}) : super(key: key);

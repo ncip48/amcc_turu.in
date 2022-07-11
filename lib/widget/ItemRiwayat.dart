@@ -5,8 +5,6 @@ import 'package:flutx/widgets/text/text.dart';
 import 'package:get/get.dart';
 import 'package:turu_in/config/config.dart';
 import 'package:turu_in/model/Booking.dart';
-import 'package:turu_in/model/Fasilitas.dart';
-import 'package:turu_in/model/Hotel.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:turu_in/utils/Currency.dart';
