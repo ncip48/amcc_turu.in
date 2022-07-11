@@ -6,6 +6,7 @@ import 'package:turu_in/pages/DetailPage.dart';
 import 'package:turu_in/pages/EditProfilPage.dart';
 import 'package:turu_in/pages/HomePage.dart';
 import 'package:turu_in/pages/ProfilPage.dart';
+import 'package:turu_in/pages/RiwayatPage.dart';
 import 'package:turu_in/pages/SigninPage.dart';
 import 'package:turu_in/pages/SignupPage.dart';
 import 'package:turu_in/pages/SplashPage.dart';
@@ -23,5 +24,6 @@ class AppPages {
     GetPage(name: Routes.Booking, page: () => BookingPage()),
     GetPage(name: Routes.Profil, page: () => ProfilPage()),
     GetPage(name: Routes.EditProfil, page: () => EditProfilPage()),
+    GetPage(name: Routes.Riwayat, page: () => RiwayatPage()),
   ];
 }

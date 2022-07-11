@@ -201,3 +201,7 @@ getFormatedTime(_date) {
 String getMonth(int currentMonthIndex) {
   return DateFormat('MMM').format(DateTime(0, currentMonthIndex)).toString();
 }
+
+getTanggal(DateTime _date) {
+  return DateFormat('d MMMM y', 'id_ID').format(_date);
+}

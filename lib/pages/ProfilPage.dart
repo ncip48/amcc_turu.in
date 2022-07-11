@@ -204,8 +204,16 @@ class _ProfilPageState extends State<ProfilPage> with TickerProviderStateMixin {
                               bottom: false,
                             ),
                             MenuProfil(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(context, Routes.Riwayat);
+                              },
                               title: "Riwayat",
+                              top: false,
+                              bottom: false,
+                            ),
+                            MenuProfil(
+                              onTap: () {},
+                              title: "Favorit",
                               top: false,
                               bottom: false,
                             ),
