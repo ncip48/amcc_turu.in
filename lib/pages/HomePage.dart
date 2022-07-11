@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, prefer_const_constructors
+// ignore_for_file: file_names, prefer_const_constructors, avoid_print
 
 import 'dart:developer';
 
@@ -9,12 +9,14 @@ import 'package:flutx/flutx.dart';
 import 'package:turu_in/config/config.dart';
 import 'package:turu_in/model/Fasilitas.dart';
 import 'package:turu_in/model/Hotel.dart';
+import 'package:turu_in/model/Location.dart';
 import 'package:turu_in/model/User.dart';
 import 'package:turu_in/routes/routes.dart';
 import 'package:turu_in/theme/app_theme.dart';
 import 'package:turu_in/widget/ItemRekomendasi.dart';
 import 'package:turu_in/widget/ItemTerdekat.dart';
 import 'package:turu_in/widget/Loading.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -31,14 +33,90 @@ class _HomePageState extends State<HomePage> {
   List<Hotel> _recommendHotels = [];
   List<Hotel> _nearbyHotels = [];
   bool _isLoading = true;
+  bool _isLoadingLocation = true;
+  Location _location = Location();
+
+  //location
+  bool servicestatus = false;
+  bool haspermission = false;
+  late LocationPermission permission;
+  late Position position;
+  String long = "-7.783319", lat = "110.375269";
 
   @override
   void initState() {
+    _checkGps();
     super.initState();
     customTheme = AppTheme.customTheme;
     theme = AppTheme.theme;
     _colorStatusBar = customTheme.turuInPrimary;
     _getHome();
+    // _getLocation();
+  }
+
+  _checkGps() async {
+    servicestatus = await Geolocator.isLocationServiceEnabled();
+    if (servicestatus) {
+      permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print('Location permissions are denied');
+        } else if (permission == LocationPermission.deniedForever) {
+          print("'Location permissions are permanently denied");
+        } else {
+          haspermission = true;
+        }
+      } else {
+        haspermission = true;
+      }
+
+      if (haspermission) {
+        setState(() {
+          //refresh the UI
+        });
+
+        getLocation();
+      }
+    } else {
+      print("GPS Service is not enabled, turn on GPS location");
+    }
+
+    setState(() {
+      //refresh the UI
+    });
+  }
+
+  getLocation() async {
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    print(position.longitude); //Output: 80.24599079
+    print(position.latitude); //Output: 29.6593457
+
+    long = position.longitude.toString();
+    lat = position.latitude.toString();
+
+    _getLocation(lat, long);
+  }
+
+  Future<void> _getLocation(String lat, String lon) async {
+    setState(() {
+      _isLoadingLocation = true;
+    });
+    final response = await getRequestAPI(
+      'location?lat=' + lat + '&lon=' + lon,
+      'get',
+      null,
+      context,
+    );
+    log(response.toString());
+    Location location = Location.fromJson(response);
+
+    setState(() {
+      _location = location;
+      _isLoadingLocation = false;
+    });
   }
 
   Future<void> _getHome() async {
@@ -132,7 +210,9 @@ class _HomePageState extends State<HomePage> {
                                   Row(
                                     children: [
                                       FxText.titleMedium(
-                                        'Ngawi',
+                                        _isLoadingLocation
+                                            ? "Loading..."
+                                            : _location.city!,
                                         color: customTheme.turuInTersier,
                                         fontSize: 17,
                                       ),
@@ -279,10 +359,10 @@ class _HomePageState extends State<HomePage> {
                                   nearbyHotel.cityName!,
                               image: nearbyHotel.image!,
                               fasilitas: Fasilitas(
-                                wifi: "20",
-                                room: "3 x 3",
-                                gender: "male",
-                                bathroom: "inside",
+                                wifi: nearbyHotel.facilities!.wifi,
+                                room: nearbyHotel.facilities!.room,
+                                gender: nearbyHotel.facilities!.type,
+                                bathroom: nearbyHotel.facilities!.bathroom,
                               ),
                               item: nearbyHotel,
                               showDistance: true,

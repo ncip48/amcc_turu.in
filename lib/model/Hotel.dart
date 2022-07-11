@@ -17,6 +17,7 @@ class Hotel {
   int? districtId;
   String? districtName;
   int? totalRooms;
+  double? distance;
   Facilities? facilities;
 
   Hotel(
@@ -36,6 +37,7 @@ class Hotel {
       this.districtId,
       this.districtName,
       this.totalRooms,
+      this.distance,
       this.facilities});
 
   Hotel.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class Hotel {
     districtId = json['district_id'];
     districtName = json['district_name'];
     totalRooms = json['total_rooms'];
+    distance = json['distance'];
     facilities = json['facilities'] != null
         ? new Facilities.fromJson(json['facilities'])
         : null;
@@ -78,6 +81,7 @@ class Hotel {
     data['district_id'] = this.districtId;
     data['district_name'] = this.districtName;
     data['total_rooms'] = this.totalRooms;
+    data['distance'] = this.distance;
     if (this.facilities != null) {
       data['facilities'] = this.facilities!.toJson();
     }

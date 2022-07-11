@@ -32,7 +32,6 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
           log('Unauthorized');
           return Navigator.of(context)
               .pushNamedAndRemoveUntil(Routes.Signin, (r) => false);
-          ;
         }
         log(map['data'].toString());
         if (!map['success']) {
@@ -115,7 +114,6 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
               prefs.remove('user');
               return Navigator.of(context)
                   .pushNamedAndRemoveUntil(Routes.Signin, (r) => false);
-              ;
             }
             log(map['message'].toString());
             if (!map['success']) {
@@ -150,7 +148,6 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
               prefs.remove('user');
               return Navigator.of(context)
                   .pushNamedAndRemoveUntil(Routes.Signin, (r) => false);
-              ;
             }
             return map['data'];
           } else {
