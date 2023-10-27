@@ -1,10 +1,11 @@
 // ignore_for_file: file_names, prefer_const_constructors, import_of_legacy_library_into_null_safe
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splashscreen/splashscreen.dart';
+// import 'package:splashscreen/splashscreen.dart';
 import 'package:turu_in/pages/HomePage.dart';
 // import 'package:turu_in/pages/HomePage.dart';
 import 'package:turu_in/pages/SigninPage.dart';
@@ -26,6 +27,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    FlutterNativeSplash.remove();
     _checkVersion();
     _checkLogin();
     customTheme = AppTheme.customTheme;
@@ -51,35 +53,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SplashScreen(
-      seconds: 5,
-      navigateAfterSeconds: _isLogin ? HomePage() : SigninPage(),
-      title: Text(
-        'Turu.in',
-        textScaleFactor: 2,
-        style: GoogleFonts.robotoMono(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: CustomTheme().cookifyOnPrimary,
-        ),
-      ),
-      image: Image.asset(
-        'assets/logo.png',
-        fit: BoxFit.contain,
-        width: 100,
-        height: 100,
-      ),
-      loadingText: Text(
-        _version ?? '0.0.0+0',
-        style: GoogleFonts.robotoMono(
-          fontSize: 18,
-          fontWeight: FontWeight.w300,
-          color: CustomTheme().cookifyOnPrimary,
-        ),
-      ),
-      photoSize: 100.0,
-      backgroundColor: CustomTheme().turuInPrimary,
-      useLoader: false,
-    );
+    return _isLogin ? HomePage() : SigninPage();
   }
 }
